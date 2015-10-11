@@ -30,14 +30,16 @@ class IndexHandler(tornado.web.RequestHandler):
     """  A class handler for the url `/` request """
     def get(self):
         """ load home page """
-        name = self.get_secure_cookie("user")
+        #name = self.get_secure_cookie("user")
+        name = self.get_cookie("user")
         self.render('index.html', title="HomeCloud", name=name, page=1)
 
 class RegistHandler(tornado.web.RequestHandler):
     """  A class handler for the url `/regist` request """
     def get(self):
         """Return `regist` page for the `/regist` get request """
-        name = self.get_secure_cookie("user")
+        #name = self.get_secure_cookie("user")
+        name = self.get_cookie("user")
         if name:
             self.redirect('/')
         else:
@@ -51,7 +53,8 @@ class RegistHandler(tornado.web.RequestHandler):
             if exist is False:
                 user = User(name, password)
                 user.saveUser()
-                self.set_secure_cookie("user", name, httponly = True, secure = True)
+                #self.set_secure_cookie("user", name, httponly = True, secure = True)
+                self.set_cookie("user", name)
                 self.redirect('/')
             else:
                 self.redirect('/regist')
@@ -60,7 +63,8 @@ class LoginHandler(tornado.web.RequestHandler):
     """  A class handler for the url `/login` request """
     def get(self):
         """Return `login` page for the `/login` get request """
-        name = self.get_secure_cookie("user")
+        #name = self.get_secure_cookie("user")
+        name = self.get_cookie("user")
         if name:
             self.redirect('/')
         else:
@@ -72,7 +76,8 @@ class LoginHandler(tornado.web.RequestHandler):
         password = self.get_argument("password", None)
         user = User(name, password)
         if user.getUser():
-            self.set_secure_cookie("user", name, httponly = True, secure = True)
+            #self.set_secure_cookie("user", name, httponly = True, secure = True)
+            self.set_cookie("user", name)
             self.redirect('/')
         else:
             self.redirect('/login')
@@ -80,7 +85,8 @@ class LoginHandler(tornado.web.RequestHandler):
 class LogoutHandler(tornado.web.RequestHandler):
     """  A class handler for the url `/logout` request """
     def get(self):
-        self.set_secure_cookie("user", '', httponly = True, secure = True)
+        #self.set_secure_cookie("user", '', httponly = True, secure = True)
+        self.set_cookie("user", '')
         self.redirect('/')
 
 class PicHandler(tornado.web.RequestHandler):
@@ -88,7 +94,8 @@ class PicHandler(tornado.web.RequestHandler):
     def get(self):
         """ Return all the pictures for the request """
         pictures = loadPicture()
-        name = self.get_secure_cookie("user")
+        #name = self.get_secure_cookie("user")
+        name = self.get_cookie("user")
         self.render('data-list.html', title="Picture", datalist=pictures, dataType="pic", name=name, page=1)
 
 class PicDetailHandler(tornado.web.RequestHandler):
@@ -96,7 +103,8 @@ class PicDetailHandler(tornado.web.RequestHandler):
     def get(self, picId):
         """ Return a specific picture according the id of picture """
         picture = getPicture(picId)
-        name = self.get_secure_cookie("user")
+        #name = self.get_secure_cookie("user")
+        name = self.get_cookie("user")
         self.render('data-detail.html', title="pic",data=picture, dataType="pic",name=name, page=1)
 
 class VideoHandler(tornado.web.RequestHandler):
@@ -104,7 +112,8 @@ class VideoHandler(tornado.web.RequestHandler):
     def get(self):
         """ Return all the videos for the request """
         videos = loadVideos()
-        name = self.get_secure_cookie("user")
+        #name = self.get_secure_cookie("user")
+        name = self.get_cookie("user")
         self.render('data-list.html', title="video",datalist=videos, dataType="video", name=name, page=1)
 
 class VideoDetailHandler(tornado.web.RequestHandler):
@@ -112,5 +121,6 @@ class VideoDetailHandler(tornado.web.RequestHandler):
     def get(self, videoId):
         """ Return a specific video according the id of video """
         video = getVideo(videoId)
-        name = self.get_secure_cookie("user")
+        #name = self.get_secure_cookie("user")
+        name = self.get_cookie("user")
         self.render('data-detail.html', title="Video-detail", data = video, dataType="video", name=name, page=1)
